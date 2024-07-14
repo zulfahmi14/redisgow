@@ -2,13 +2,12 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"net"
-	"os"
+	"redisgow/cmd/library"
 )
 
 func main() {
-	port := "6000"
+	port := "6379"
 	fmt.Printf("Redisgow listening %s ", port)
 	l, err := net.Listen("tcp", ":"+port)
 	if err != nil {
@@ -22,22 +21,19 @@ func main() {
 		return
 	}
 
-	for {
-		buf := make([]byte, 1024)
+	defer conn.Close() // close connection once finished
 
-		// read message from client
-		_, err = conn.Read(buf)
+	for {
+		resp := library.NewResp(conn)
+		value, err := resp.Read()
 		if err != nil {
-			if err == io.EOF {
-				break
-			}
-			fmt.Println("error reading from client: ", err.Error())
-			os.Exit(1)
+			fmt.Println(err)
+			return
 		}
 
-		// giving response
+		fmt.Println(value)
+
+		// ignore request and send back a PONG
 		conn.Write([]byte("+OK\r\n"))
 	}
-
-	defer conn.Close() // close connection once finished
 }
