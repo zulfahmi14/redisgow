@@ -26,3 +26,6 @@ vendor/
 .DS_Store
 Thumbs.db
 *.idea
+
+# AOF
+aof
