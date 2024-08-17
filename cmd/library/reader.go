@@ -8,16 +8,16 @@ import (
 )
 
 const (
-	//STRING  = '+'
-	//ERROR   = '-'
-	//INTEGER = ':'
-	BULK  = '$'
-	ARRAY = '*'
+	STRING  = '+'
+	ERROR   = '-'
+	INTEGER = ':'
+	BULK    = '$'
+	ARRAY   = '*'
 )
 
 type Value struct {
-	typ   string
-	str   string
+	Typ   string
+	Str   string
 	num   int
 	bulk  string
 	array []Value
@@ -78,7 +78,7 @@ func (r *Resp) Read() (Value, error) {
 
 func (r *Resp) readArray() (Value, error) {
 	v := Value{}
-	v.typ = "array"
+	v.Typ = "array"
 
 	// read length of array
 	len, _, err := r.readInteger()
@@ -104,7 +104,7 @@ func (r *Resp) readArray() (Value, error) {
 func (r *Resp) readBulk() (Value, error) {
 	v := Value{}
 
-	v.typ = "bulk"
+	v.Typ = "bulk"
 
 	len, _, err := r.readInteger()
 	if err != nil {
