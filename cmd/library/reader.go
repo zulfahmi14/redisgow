@@ -18,9 +18,9 @@ const (
 type Value struct {
 	Typ   string
 	Str   string
-	num   int
-	bulk  string
-	array []Value
+	Num   int
+	Bulk  string
+	Array []Value
 }
 
 type Resp struct {
@@ -87,7 +87,7 @@ func (r *Resp) readArray() (Value, error) {
 	}
 
 	// foreach line, parse and read the value
-	v.array = make([]Value, 0)
+	v.Array = make([]Value, 0)
 	for i := 0; i < len; i++ {
 		val, err := r.Read()
 		if err != nil {
@@ -95,7 +95,7 @@ func (r *Resp) readArray() (Value, error) {
 		}
 
 		// append parsed value to array
-		v.array = append(v.array, val)
+		v.Array = append(v.Array, val)
 	}
 
 	return v, nil
@@ -115,7 +115,7 @@ func (r *Resp) readBulk() (Value, error) {
 
 	r.reader.Read(bulk)
 
-	v.bulk = string(bulk)
+	v.Bulk = string(bulk)
 
 	// Read the trailing CRLF
 	r.readLine()

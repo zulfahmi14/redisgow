@@ -42,23 +42,23 @@ func (v Value) marshalString() []byte {
 func (v Value) marshalBulk() []byte {
 	var bytes []byte
 	bytes = append(bytes, BULK)
-	bytes = append(bytes, strconv.Itoa(len(v.bulk))...)
+	bytes = append(bytes, strconv.Itoa(len(v.Bulk))...)
 	bytes = append(bytes, '\r', '\n')
-	bytes = append(bytes, v.bulk...)
+	bytes = append(bytes, v.Bulk...)
 	bytes = append(bytes, '\r', '\n')
 
 	return bytes
 }
 
 func (v Value) marshalArray() []byte {
-	len := len(v.array)
+	len := len(v.Array)
 	var bytes []byte
 	bytes = append(bytes, ARRAY)
 	bytes = append(bytes, strconv.Itoa(len)...)
 	bytes = append(bytes, '\r', '\n')
 
 	for i := 0; i < len; i++ {
-		bytes = append(bytes, v.array[i].Marshal()...)
+		bytes = append(bytes, v.Array[i].Marshal()...)
 	}
 
 	return bytes
