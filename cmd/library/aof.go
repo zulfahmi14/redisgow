@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"io"
 	"os"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -49,6 +50,13 @@ func (aof *Aof) Close() error {
 func (aof *Aof) Write(value Value) error {
 	aof.Mu.Lock()
 	defer aof.Mu.Unlock()
+
+	if len(value.Array) == 4 { // indicate there is TTL
+		v := Value{}
+		v.Typ = "bulk"
+		v.Bulk = strconv.FormatInt(time.Now().Unix(), 10)
+		value.Array = append(value.Array, v)
+	}
 
 	_, err := aof.File.Write(value.Marshal())
 	if err != nil {

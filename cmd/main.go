@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"net"
 	"redisgow/cmd/library"
+	"strconv"
 	"strings"
+	"time"
 )
 
 func main() {
@@ -26,6 +28,20 @@ func main() {
 	aof.Read(func(value library.Value) {
 		command := strings.ToUpper(value.Array[0].Bulk)
 		args := value.Array[1:]
+
+		if len(args) == 4 { // if TTL has been passed, do not insert!
+			v := args[len(args)-1]   // timestamp
+			ttl := args[len(args)-2] // ttl
+			timestamp, _ := strconv.ParseInt(v.Bulk, 10, 64)
+			ttlNum, _ := strconv.ParseInt(ttl.Bulk, 10, 64)
+			if v.Typ == "bulk" && timestamp+ttlNum <= time.Now().Unix() {
+				return
+			}
+
+			ttl.Bulk = strconv.FormatInt(timestamp+ttlNum-time.Now().Unix(), 10) // update TTL based on current date
+			args[len(args)-2] = ttl
+			args = args[:len(args)-1] // remove the timestamp info
+		}
 
 		handler, ok := Handlers[command]
 		if !ok {
@@ -79,8 +95,6 @@ func main() {
 		}
 
 		result := handler(args)
-
-		fmt.Print("masokk, %s", result)
 
 		writer.Write(result)
 	}

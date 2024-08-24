@@ -18,7 +18,7 @@ const (
 type Value struct {
 	Typ   string
 	Str   string
-	Num   int
+	Num   int64
 	Bulk  string
 	Array []Value
 }
