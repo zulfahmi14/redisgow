@@ -52,6 +52,18 @@ func main() {
 		handler(args)
 	})
 
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				library.Sweep()
+			}
+		}
+	}()
+
 	conn, err := l.Accept()
 	if err != nil {
 		fmt.Println(err)
