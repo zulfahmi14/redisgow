@@ -29,7 +29,7 @@ This project is a personal attempt to build a Redis-like key-value store using G
    - If more than 75% of the checked keys are not expired in one cycle, the process stops. The next sweep will start after 1 second.
 
 ### Final Thoughts
-This project is far from perfect, and there are many areas for improvement. However, the key takeaway for me was understanding how certain features work under the hood — like Redis key deletion mechanism, which initially seemed like magic.
+This project is far from perfect (or even good), and there are many areas for improvement. However, the key takeaway for me was understanding how certain features work under the hood — like Redis key deletion mechanism, which initially seemed like magic.
 
 ---
 
